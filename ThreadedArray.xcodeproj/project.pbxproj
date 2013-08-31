@@ -388,7 +388,6 @@
 		38016CD417D211A300193F12 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/ThreadedArray.app/ThreadedArray";
 				FRAMEWORK_SEARCH_PATHS = (
 					"\"$(SDKROOT)/Developer/Library/Frameworks\"",
 					"\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"",
@@ -397,7 +396,6 @@
 				GCC_PREFIX_HEADER = "ThreadedArray/ThreadedArray-Prefix.pch";
 				INFOPLIST_FILE = "ThreadedArrayTests/ThreadedArrayTests-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = octest;
 			};
 			name = Debug;
@@ -405,7 +403,6 @@
 		38016CD517D211A300193F12 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/ThreadedArray.app/ThreadedArray";
 				FRAMEWORK_SEARCH_PATHS = (
 					"\"$(SDKROOT)/Developer/Library/Frameworks\"",
 					"\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"",
@@ -414,7 +411,6 @@
 				GCC_PREFIX_HEADER = "ThreadedArray/ThreadedArray-Prefix.pch";
 				INFOPLIST_FILE = "ThreadedArrayTests/ThreadedArrayTests-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = octest;
 			};
 			name = Release;
