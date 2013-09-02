@@ -20,16 +20,15 @@
  - can increment on a second thread
  - after both threads complete increment, verify each array element == 2 (or sum = size * 2)
 */
-#define SIZE 1000000
+#define SIZE 1000
 
 @implementation ThreadedArrayTests {
     int *_p_array;
     NSThread *_threadOne;
     NSThread *_threadTwo;
-    NSThread *_threadThree;
-    NSThread *_threadFour;
     NSLock *_lock;
     BOOL _debug;
+    void (*_incrementFunction)(id self_, int index);
 }
 
 - (void)setUp {
@@ -44,16 +43,7 @@
                                            object:nil];
 
     _threadTwo.name = @"Thr2";
-    _threadThree = [[NSThread alloc] initWithTarget:self
-                                         selector:@selector(incrementArrayUnsynched)
-                                           object:nil];
-    
-    _threadThree.name = @"Thr3";
-    _threadFour = [[NSThread alloc] initWithTarget:self
-                                           selector:@selector(incrementArrayUnsynched)
-                                             object:nil];
-    
-    _threadFour.name = @"Thr4";
+
     _lock = [[NSLock alloc] init];
 }
 
@@ -61,8 +51,6 @@
     free(_p_array);
     _threadOne = nil;
     _threadTwo = nil;
-    _threadThree = nil;
-    _threadFour = nil;
     _lock = nil;
     [super tearDown];
 }
@@ -78,32 +66,49 @@
     return sum;
 }
 
-void forwardLoop( void (*incrementFunction)() ) {
+
+#pragma mark - C stuff
+- (void)forwardLoopWrapper {
+    forwardLoop(self, _incrementFunction);
+}
+
+- (void)reverseLoopWrapper {
+    reverseLoop(self, _incrementFunction);
+}
+
+void forwardLoop( id _self, void (*incrementFunction)(id self_, int index) ) {
     for (int index = 0; index < SIZE; ++ index) {
-        incrementFunction();
+        incrementFunction(_self, index);
     }
 }
 
-void reverseLoop( void (*incrementFunction)() ) {
+void reverseLoop( id _self, void (*incrementFunction)(id self_, int index) ) {
     for (int index = SIZE - 1; index >= 0; --index) {
-        incrementFunction();
+        incrementFunction(_self, index);
     }
 }
 
-void NSLockIncrement() {
-    
+void NSLockIncrement(ThreadedArrayTests* self_, int index) {
+    int * item = & self_->_p_array[index];
+    [self_->_lock lock];
+    ++(*item);
+    [self_->_lock unlock];
 }
 
-void synchroIncrement () {
-    
+void synchroIncrement (ThreadedArrayTests* self_, int index) {
+    int * item = & self_->_p_array[index];
+    @synchronized(self_) {
+        ++(*item);
+    }
 }
 
-void myOSAtomicIncrement() {
-    
+void myOSAtomicIncrement(ThreadedArrayTests* self_, int index) {
+    int * item = & self_->_p_array[index];
+    OSAtomicIncrement32(item);
 }
 
-void unsynchroIncrement() {
-    
+void unsynchroIncrement(ThreadedArrayTests* self_, int index) {
+    ++(self_->_p_array[index]);
 }
 
 - (void) incrementArrayNSLockForward {
@@ -188,28 +193,69 @@ void unsynchroIncrement() {
     STAssertTrue(sum == SIZE * 2, @"sum of array ints after both threads increment with sync should equal twice array size");
 }
 
-- (void)testMultipleRunsOfIncrement {
+
+
+- (void)incrementTwoThreadsWithCUsingIncrementFunction {
+    if (_incrementFunction == nil) _incrementFunction = synchroIncrement;
+    
+    NSThread *thread1 = [[NSThread alloc] initWithTarget:self
+                                                selector:@selector(forwardLoopWrapper)
+                                                  object:nil];
+    NSThread *thread2 = [[NSThread alloc] initWithTarget:self
+                                                selector:@selector(forwardLoopWrapper)
+                                                  object:nil];
+    [thread1 start];
+    [thread2 start];
+    while ([thread1 isExecuting] || [thread2 isExecuting]) {
+        ;
+    }
+    int sum = [self sumOfArrayItems];
+    if (sum != 2 * SIZE) {
+        NSLog(@"sum is: %d, expected %d", sum, 2 * SIZE);
+    }
+    STAssertTrue(sum == SIZE * 2, @"sum of array ints after both threads increment should equal twice array size");
+}
+
+- (void)testIncrementingTwoThreadsWithCUsingSynchro {
+    _incrementFunction = synchroIncrement;
+    [self incrementTwoThreadsWithCUsingIncrementFunction];
+}
+
+- (void)testIncrementingTwoThreadsWithCUsingNSLock {
+    _incrementFunction = NSLockIncrement;
+    [self incrementTwoThreadsWithCUsingIncrementFunction];
+}
+
+- (void)testIncrementingTwoThreadsWithCUsingOSAtomicIncrement {
+    _incrementFunction = myOSAtomicIncrement;
+    [self incrementTwoThreadsWithCUsingIncrementFunction];
+}
+
+- (void)testCanIncrementOnTwoThreadsSimultaneouslyWithoutSync {
+    _incrementFunction = unsynchroIncrement;
+    [self incrementTwoThreadsWithCUsingIncrementFunction];
+}
+
+- (void)testMultipleRunsOfIncrementWithoutSync {
     _debug = YES;
-    for (int i = 0; i < 2000; ++i) {
-        [self testCanIncrementOnTwoThreadsSimultaneously];
+    for (int i = 0; i < 10000; ++i) {
+        [self testCanIncrementOnTwoThreadsSimultaneouslyWithoutSync];
         [self tearDown];
         [self setUp];
     }
     _debug = NO;
 }
 
-/*
-- (void)testCanIncrementOnTwoThreadsSimultaneouslyWithoutSync {
-    [_threadThree start];
-    [_threadFour start];
-    while ([_threadThree isExecuting] || [_threadFour isExecuting]) {
-        ;
+- (void)testMultipleRunsOfIncrementWithpNSLock {
+    _debug = YES;
+    for (int i = 0; i < 10000; ++i) {
+        [self testIncrementingTwoThreadsWithCUsingNSLock];
+        [self tearDown];
+        [self setUp];
     }
-    if ([self sumOfArrayItems] != 2 * SIZE) {
-        NSLog(@"sum is: %d, expected %d", [self sumOfArrayItems], 2 * SIZE);
-    }
-    STAssertTrue([self sumOfArrayItems] == SIZE * 2, @"sum of array ints after both threads increment without sync should equal twice array size");
+    _debug = NO;
 }
-*/
+
+
 
 @end
