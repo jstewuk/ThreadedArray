@@ -1,16 +1,23 @@
 //
-//  ThreadedArrayTests.m
-//  ThreadedArrayTests
+//  ThreadedArrayTestbedTests.m
+//  ThreadedArrayTestBedTests
+//
+//  Empirical tests that synchronization,locking and OSAtomicIncrementer work.
+//  May have to increase size to see thread contention and get the unsyncronized test
+//  to fail
+//
 //
 //  Created by James Stewart on 8/31/13.
 //  Copyright (c) 2013 StewartStuff. All rights reserved.
 //
 
-#import "ThreadedArrayTests.h"
+#import <SenTestingKit/SenTestingKit.h>
 #import <libkern/OSAtomic.h>
 
 /*
- In a relevant language, create an array of 1000 numbers. Initialize all of the values in the array to zero. Create two threads that run concurrently and which increment each element of the array one time. When both threads have finished running, all elements in the array should have the value of two. Verify this.
+ In a relevant language, create an array of 1000 numbers. Initialize all of the values in the array to zero. 
+ Create two threads that run concurrently and which increment each element of the array one time. When both
+ threads have finished running, all elements in the array should have the value of two. Verify this.
  */
 
 /* Tests:
@@ -22,7 +29,10 @@
 */
 #define SIZE 1000
 
-@implementation ThreadedArrayTests {
+@interface ThreadedArrayTestBedTests : SenTestCase
+@end
+
+@implementation ThreadedArrayTestBedTests {
     int *_p_array;
     NSThread *_threadOne;
     NSThread *_threadTwo;
@@ -88,26 +98,26 @@ void reverseLoop( id _self, void (*incrementFunction)(id self_, int index) ) {
     }
 }
 
-void NSLockIncrement(ThreadedArrayTests* self_, int index) {
+void NSLockIncrement(ThreadedArrayTestBedTests* self_, int index) {
     int * item = & self_->_p_array[index];
     [self_->_lock lock];
     ++(*item);
     [self_->_lock unlock];
 }
 
-void synchroIncrement (ThreadedArrayTests* self_, int index) {
+void synchroIncrement (ThreadedArrayTestBedTests* self_, int index) {
     int * item = & self_->_p_array[index];
     @synchronized(self_) {
         ++(*item);
     }
 }
 
-void myOSAtomicIncrement(ThreadedArrayTests* self_, int index) {
+void myOSAtomicIncrement(ThreadedArrayTestBedTests* self_, int index) {
     int * item = & self_->_p_array[index];
     OSAtomicIncrement32(item);
 }
 
-void unsynchroIncrement(ThreadedArrayTests* self_, int index) {
+void unsynchroIncrement(ThreadedArrayTestBedTests* self_, int index) {
     ++(self_->_p_array[index]);
 }
 
@@ -162,6 +172,8 @@ void unsynchroIncrement(ThreadedArrayTests* self_, int index) {
     }
 }
 
+
+#pragma mark - TDD
 
 - (void)testCanCreateAnEmptyArray {
     STAssertTrue([self sumOfArrayItems] == 0, @"sum of array ints should equal zero initially");

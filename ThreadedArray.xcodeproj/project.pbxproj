@@ -20,7 +20,10 @@
 		38016CC117D211A300193F12 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38016CA117D211A200193F12 /* UIKit.framework */; };
 		38016CC217D211A300193F12 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 38016CA317D211A200193F12 /* Foundation.framework */; };
 		38016CCA17D211A300193F12 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 38016CC817D211A300193F12 /* InfoPlist.strings */; };
-		38016CCD17D211A300193F12 /* ThreadedArrayTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 38016CCC17D211A300193F12 /* ThreadedArrayTests.m */; };
+		38016CCD17D211A300193F12 /* ThreadedArrayIncrementerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 38016CCC17D211A300193F12 /* ThreadedArrayIncrementerTests.m */; };
+		382B0A9817D57DAC006300DD /* ThreadedArrayIncrementer.m in Sources */ = {isa = PBXBuildFile; fileRef = 382B0A9717D57DAC006300DD /* ThreadedArrayIncrementer.m */; };
+		382B0A9917D58C22006300DD /* ThreadedArrayIncrementer.m in Sources */ = {isa = PBXBuildFile; fileRef = 382B0A9717D57DAC006300DD /* ThreadedArrayIncrementer.m */; };
+		382B0A9B17D59038006300DD /* ThreadedArrayTestbedTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 382B0A9A17D59038006300DD /* ThreadedArrayTestbedTests.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,8 +54,10 @@
 		38016CBF17D211A300193F12 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
 		38016CC717D211A300193F12 /* ThreadedArrayTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "ThreadedArrayTests-Info.plist"; sourceTree = "<group>"; };
 		38016CC917D211A300193F12 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		38016CCB17D211A300193F12 /* ThreadedArrayTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ThreadedArrayTests.h; sourceTree = "<group>"; };
-		38016CCC17D211A300193F12 /* ThreadedArrayTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ThreadedArrayTests.m; sourceTree = "<group>"; };
+		38016CCC17D211A300193F12 /* ThreadedArrayIncrementerTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ThreadedArrayIncrementerTests.m; sourceTree = "<group>"; };
+		382B0A9617D57DAC006300DD /* ThreadedArrayIncrementer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ThreadedArrayIncrementer.h; sourceTree = "<group>"; };
+		382B0A9717D57DAC006300DD /* ThreadedArrayIncrementer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ThreadedArrayIncrementer.m; sourceTree = "<group>"; };
+		382B0A9A17D59038006300DD /* ThreadedArrayTestbedTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ThreadedArrayTestbedTests.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -114,6 +119,8 @@
 			children = (
 				38016CB017D211A300193F12 /* JSAppDelegate.h */,
 				38016CB117D211A300193F12 /* JSAppDelegate.m */,
+				382B0A9617D57DAC006300DD /* ThreadedArrayIncrementer.h */,
+				382B0A9717D57DAC006300DD /* ThreadedArrayIncrementer.m */,
 				38016CA817D211A200193F12 /* Supporting Files */,
 			);
 			path = ThreadedArray;
@@ -136,8 +143,8 @@
 		38016CC517D211A300193F12 /* ThreadedArrayTests */ = {
 			isa = PBXGroup;
 			children = (
-				38016CCB17D211A300193F12 /* ThreadedArrayTests.h */,
-				38016CCC17D211A300193F12 /* ThreadedArrayTests.m */,
+				382B0A9A17D59038006300DD /* ThreadedArrayTestbedTests.m */,
+				38016CCC17D211A300193F12 /* ThreadedArrayIncrementerTests.m */,
 				38016CC617D211A300193F12 /* Supporting Files */,
 			);
 			path = ThreadedArrayTests;
@@ -264,6 +271,7 @@
 			files = (
 				38016CAE17D211A300193F12 /* main.m in Sources */,
 				38016CB217D211A300193F12 /* JSAppDelegate.m in Sources */,
+				382B0A9817D57DAC006300DD /* ThreadedArrayIncrementer.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -271,7 +279,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				38016CCD17D211A300193F12 /* ThreadedArrayTests.m in Sources */,
+				38016CCD17D211A300193F12 /* ThreadedArrayIncrementerTests.m in Sources */,
+				382B0A9917D58C22006300DD /* ThreadedArrayIncrementer.m in Sources */,
+				382B0A9B17D59038006300DD /* ThreadedArrayTestbedTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -434,6 +444,7 @@
 				38016CD217D211A300193F12 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		38016CD317D211A300193F12 /* Build configuration list for PBXNativeTarget "ThreadedArrayTests" */ = {
 			isa = XCConfigurationList;
@@ -442,6 +453,7 @@
 				38016CD517D211A300193F12 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
